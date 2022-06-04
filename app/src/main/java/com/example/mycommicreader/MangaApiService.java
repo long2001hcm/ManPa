@@ -1,25 +1,26 @@
 package com.example.mycommicreader;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.List;
 
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Single;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
 
-public class MangaApiService {
-    private static final String BASE_URL = "https://api.mangadex.org";
-    private static MangaAPI mangaAPI;
-
-    public MangaApiService(){
-        if(mangaAPI == null){
-            mangaAPI = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava3CallAdapterFactory.create()).build().create(MangaAPI.class);
-        }
-    }
-    public Single<List<MangaBread>> getMangas(){
-        return  mangaAPI.getMangas();
-    }
+public interface MangaApiService {
+    Gson gson = new GsonBuilder()
+            .setDateFormat("dd-MM-yyyy HH:mm:ss")
+            .create();
+    MangaApiService apiService = new Retrofit.Builder()
+            .baseUrl("https://api.mangadex.org/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(MangaApiService.class);
+    @GET("manga")
+    Call<MangaBread> getManga();
 }

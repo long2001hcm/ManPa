@@ -12,30 +12,25 @@ import java.util.List;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private MangaApiService mangaApiService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mangaApiService = new MangaApiService();
-        mangaApiService.getMangas()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<List<MangaBread>>() {
-                    @Override
-                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<MangaBread> mangaBreads) {
-                        MangaBread mangaBread = mangaBreads.get(0);
+        MangaApiService.apiService.getManga().enqueue(new Callback<MangaBread>() {
+            @Override
+            public void onResponse(Call<MangaBread> call, Response<MangaBread> response) {
+                Log.d("DEBUG", response.body().getData().size() + "");
+            }
 
-                        Log.d("DEBUG1","mangaBread.getData().get(0).getID()");
+            @Override
+            public void onFailure(Call<MangaBread> call, Throwable t) {
 
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-                        Log.d("DEBUG1",e.getMessage());
-                    }
-                });
+            }
+        });
     }
 }
