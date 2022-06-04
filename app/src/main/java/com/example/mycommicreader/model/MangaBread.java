@@ -1,4 +1,4 @@
-package com.example.mycommicreader;
+package com.example.mycommicreader.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
