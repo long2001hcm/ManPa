@@ -7,5 +7,5 @@ import retrofit2.http.GET;
 
 public interface MangaAPI {
     @GET("manga")
-    public Single<List<MangaBread>> getMangas();
+    public Single<MangaBread> getMangas();
 }

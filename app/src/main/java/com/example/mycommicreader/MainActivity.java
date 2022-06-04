@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -23,13 +24,12 @@ public class MainActivity extends AppCompatActivity {
         mangaApiService.getMangas()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<List<MangaBread>>() {
+                .subscribeWith(new DisposableSingleObserver<MangaBread>() {
+
                     @Override
-                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<MangaBread> mangaBreads) {
-                        MangaBread mangaBread = mangaBreads.get(0);
-
-                        Log.d("DEBUG1","mangaBread.getData().get(0).getID()");
-
+                    public void onSuccess(@NonNull MangaBread mangaBread) {
+                        String a = mangaBread.getData().get(0).getID();
+                        Log.d("DEBUG1",a);
                     }
 
                     @Override

@@ -19,7 +19,7 @@ public class MangaApiService {
                     .addCallAdapterFactory(RxJava3CallAdapterFactory.create()).build().create(MangaAPI.class);
         }
     }
-    public Single<List<MangaBread>> getMangas(){
+    public Single<MangaBread> getMangas(){
         return  mangaAPI.getMangas();
     }
 }
