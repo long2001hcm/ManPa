@@ -6,35 +6,29 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.mycommicreader.model.MangaBread;
-import com.example.mycommicreader.view.MangaApiService;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.observers.DisposableSingleObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import com.example.mycommicreader.modelview.MangaApiService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private MangaApiService mangaApiService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mangaApiService = new MangaApiService();
-        mangaApiService.getMangas()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<MangaBread>() {
 
-                    @Override
-                    public void onSuccess(@NonNull MangaBread mangaBread) {
-                        String a = mangaBread.getData().get(0).getID();
-                        Log.d("DEBUG1",a);
-                    }
+        MangaApiService.apiService.getManga().enqueue(new Callback<MangaBread>() {
+            @Override
+            public void onResponse(Call<MangaBread> call, Response<MangaBread> response) {
+                Log.d("DEBUG", response.body().getData().size() + "");
+            }
 
-                    @Override
-                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-                        Log.d("DEBUG1",e.getMessage());
-                    }
-                });
+            @Override
+            public void onFailure(Call<MangaBread> call, Throwable t) {
+
+            }
+        });
     }
 }
