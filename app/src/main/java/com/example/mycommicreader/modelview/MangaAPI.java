@@ -1,6 +1,6 @@
-package com.example.mycommicreader;
+package com.example.mycommicreader.modelview;
 
-import java.util.List;
+import com.example.mycommicreader.model.MangaBread;
 
 import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.GET;

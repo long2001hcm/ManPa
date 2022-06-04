@@ -1,6 +1,7 @@
-package com.example.mycommicreader;
+package com.example.mycommicreader.view;
 
-import java.util.List;
+import com.example.mycommicreader.model.MangaBread;
+import com.example.mycommicreader.modelview.MangaAPI;
 
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Single;

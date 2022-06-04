@@ -1,13 +1,12 @@
 package com.example.mycommicreader;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.os.Bundle;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.mycommicreader.model.MangaBread;
+import com.example.mycommicreader.view.MangaApiService;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
