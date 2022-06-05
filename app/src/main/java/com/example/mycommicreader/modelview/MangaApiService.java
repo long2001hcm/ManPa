@@ -1,16 +1,16 @@
-package com.example.mycommicreader;
+package com.example.mycommicreader.modelview;
 
+import com.example.mycommicreader.model.LatestChapter;
+import com.example.mycommicreader.model.MangaBread;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.List;
-
-import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
-import io.reactivex.rxjava3.core.Single;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface MangaApiService {
     Gson gson = new GsonBuilder()
@@ -21,6 +21,10 @@ public interface MangaApiService {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(MangaApiService.class);
-    @GET("manga")
+
+    @GET("manga?includes[]=cover_art&order[followedCount]=desc&contentRating[]=safe&limit=50")
     Call<MangaBread> getManga();
+
+    @GET("chapter?translatedLanguage[]=en&order[chapter]=desc&limit=1")
+    Call<LatestChapter> getLatestChapter(@Query("manga") String id);
 }
