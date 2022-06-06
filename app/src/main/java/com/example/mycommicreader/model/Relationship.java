@@ -13,6 +13,7 @@ public class Relationship {
     public String getFilename() {
         return attribute.getFilename();
     }
+    public String getAuthor() {return attribute.getAuthorName(); }
     public String getId() {
         return this.id;
     }

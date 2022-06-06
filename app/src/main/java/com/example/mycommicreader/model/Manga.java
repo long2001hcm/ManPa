@@ -42,6 +42,18 @@ public class Manga {
     public String getTitle() {
         return attribute.getTitle();
     }
+    //get manga type
+    public String getType() {
+        return attribute.getType();
+    }
+    //get manga title
+    public String getStatus() {
+        return attribute.getStatus();
+    }
+    //get manga title
+    public String getYear() {
+        return attribute.getYear();
+    }
     //get manga description
     public String getDescription() {
         return attribute.getDescription();
@@ -51,6 +63,14 @@ public class Manga {
         for (Relationship r: relationships) {
             if (r.getType().equals("cover_art"))
                 return r.getFilename();
+        }
+        return "";
+    }
+    //get author
+    public String getAuthor() {
+        for (Relationship r: relationships) {
+            if (r.getType().equals("author"))
+                return r.getAuthor();
         }
         return "";
     }

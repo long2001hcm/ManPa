@@ -11,8 +11,26 @@ public class Attribute {
     @SerializedName("description")
     private Description description;
 
+    @SerializedName("publicationDemographic")
+    private String type;
 
+    @SerializedName("status")
+    private String status;
 
+    @SerializedName("year")
+    private String year;
+
+    public String getType() {
+        return type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getYear() {
+        return year;
+    }
 
     public String getTitle() {
         return title.getTitle();

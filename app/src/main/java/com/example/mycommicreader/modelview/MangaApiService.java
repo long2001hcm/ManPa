@@ -24,7 +24,7 @@ public interface MangaApiService {
             .build()
             .create(MangaApiService.class);
 
-    @GET("manga?includes[]=cover_art&order[followedCount]=desc&contentRating[]=safe&limit=50")
+    @GET("manga?includes[]=cover_art&includes[]=author&order[followedCount]=desc&contentRating[]=safe&limit=100")
     Call<MangaBread> getManga();
 
     @GET("chapter?translatedLanguage[]=en&order[chapter]=desc&limit=1")
