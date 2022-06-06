@@ -1,15 +1,20 @@
 package com.example.mycommicreader.model;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MangaBread {
+public class MangaBread implements Serializable {
     @SerializedName("data")
-    private List<Manga> data;
+    private ArrayList<Manga> data;
+
+    @SerializedName("result")
+    private String rs;
 
 
 
-    public MangaBread(List<Manga> data) {
+    public MangaBread(ArrayList<Manga> data) {
         this.data = data;
     }
 
@@ -17,7 +22,7 @@ public class MangaBread {
         return data;
     }
 
-    public void setData(List<Manga> data) {
+    public void setData(ArrayList<Manga> data) {
         this.data = data;
     }
 }

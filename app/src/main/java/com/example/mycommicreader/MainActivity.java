@@ -18,9 +18,14 @@ import com.example.mycommicreader.modelview.MangaApiService;
 import com.example.mycommicreader.databinding.ActivityMainBinding;
 import com.example.mycommicreader.view.MangaAdapter;
 
+import com.example.mycommicreader.model.MangaBread;
+import com.example.mycommicreader.modelview.MangaApiService;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class GetManga extends AsyncTask<Void, Void, Void> {
-        List<Manga> mangaList = new ArrayList<Manga>();
+        List<Manga> mangaList = new ArrayList<>();
         @Override
         protected  void onPreExecute () {
             progress = ProgressDialog.show(MainActivity.this, "Loading...", "Please Wait!!!");
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground (Void... devices) {
+
 
             try {
                 Response<MangaBread> m = MangaApiService.apiService.getManga().execute();
@@ -73,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
             return null;
         }
+
 
 
 

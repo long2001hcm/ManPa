@@ -1,6 +1,7 @@
 package com.example.mycommicreader.modelview;
 
 import com.example.mycommicreader.model.LatestChapter;
+
 import com.example.mycommicreader.model.MangaBread;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,6 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+
 
 public interface MangaApiService {
     Gson gson = new GsonBuilder()
