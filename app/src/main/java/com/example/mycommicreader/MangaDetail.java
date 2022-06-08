@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,7 +22,7 @@ public class MangaDetail extends AppCompatActivity {
     private String id;
     private String name;
     private String coverFileName;
-    private String description;
+    private String tag;
     private String author;
     private String type;
     private String status;
@@ -32,28 +33,40 @@ public class MangaDetail extends AppCompatActivity {
         setContentView(R.layout.activity_manga_detail);
         binding = ActivityMangaDetailBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(view);
-
+        binding.followButton.setText("Follow");
         Intent intent = getIntent();
 
         if (intent != null) {
             id = intent.getStringExtra("id");
             name = intent.getStringExtra("name");
             coverFileName = intent.getStringExtra("Cover");
-            description = intent.getStringExtra("description");
+            tag = intent.getStringExtra("tag");
             author = intent.getStringExtra("author");
             type = intent.getStringExtra("type");
             status = intent.getStringExtra("status");
             year = intent.getStringExtra("year");
-            binding.description.setText(description);
-            binding.author.setText("Author: " + author);
-            binding.type.setText("Demographic: " + type);
-            binding.status.setText("Status: " + status);
-            binding.year.setText("Year: " + year);
-            getSupportActionBar().setTitle(name);
+            binding.title.setText(name + ".");
+            binding.tag.setText("Tags: " + tag + ".");
+            binding.author.setText("Author: " + author + ".");
+            binding.type.setText("Demographic: " + type + ".");
+            binding.status.setText("Status: " + status + ".");
+            binding.year.setText("Year: " + year + ".");
+            getSupportActionBar().setTitle("Manga Details");
             new MangaDetail.DownloadImageTask(binding.cover)
                     .execute("https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg");
         }
+        binding.followButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (binding.followButton.getText().toString() == "Follow") {
+                    binding.followButton.setText("Followed");
+                } else {
+                    binding.followButton.setText("Follow");
+                }
+            }
+        });
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -78,5 +91,14 @@ public class MangaDetail extends AppCompatActivity {
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return true;
     }
 }

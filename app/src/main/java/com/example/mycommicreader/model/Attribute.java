@@ -2,14 +2,15 @@ package com.example.mycommicreader.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Attribute {
     @SerializedName("title")
     private Title title;
 
-    @SerializedName("description")
-    private Description description;
+    @SerializedName("tags")
+    private ArrayList<Tag> tag;
 
     @SerializedName("publicationDemographic")
     private String type;
@@ -35,8 +36,17 @@ public class Attribute {
     public String getTitle() {
         return title.getTitle();
     }
-    public String getDescription() {
-        return description.getDescription();
+    public String getTag() {
+        String s = "";
+        int i = 0;
+        for(Tag t:tag) {
+            i++;
+            s = s + t.getName();
+            if (i < tag.size()) {
+                s = s + ", ";
+            }
+        }
+        return s;
     }
     public class Title {
         @SerializedName("en")
@@ -53,11 +63,26 @@ public class Attribute {
         }
     }
 
-    public class Description {
-        @SerializedName("en")
-        private String description;
-        public String getDescription() {
-            return this.description;
+    public class Tag {
+        @SerializedName("attributes")
+        private TagAttribute attribute;
+        public String getName() {
+            return attribute.getName();
+        }
+        public class TagAttribute {
+            @SerializedName("name")
+            private TagName name;
+            public String getName() {
+                return name.getName();
+            }
+            public class TagName {
+                @SerializedName("en")
+                private String name;
+
+                public String getName() {
+                    return name;
+                }
+            }
         }
     }
 }

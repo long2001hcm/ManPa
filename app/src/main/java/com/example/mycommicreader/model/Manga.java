@@ -55,8 +55,8 @@ public class Manga {
         return attribute.getYear();
     }
     //get manga description
-    public String getDescription() {
-        return attribute.getDescription();
+    public String getTag() {
+        return attribute.getTag();
     }
     //get cover art id
     public String getCoverFileName() {
