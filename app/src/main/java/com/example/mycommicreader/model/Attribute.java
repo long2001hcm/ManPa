@@ -9,6 +9,8 @@ public class Attribute {
     @SerializedName("title")
     private Title title;
 
+
+
     @SerializedName("tags")
     private ArrayList<Tag> tag;
 
@@ -55,9 +57,15 @@ public class Attribute {
         @SerializedName("ja-ro")
         private String jaro_title = null;
 
+        @SerializedName("ja")
+        private String ja_title = null;
+
         public String getTitle() {
             if (en_title!=null)
                 return en_title;
+
+            if (ja_title!=null)
+                return ja_title;
 
             return jaro_title;
         }

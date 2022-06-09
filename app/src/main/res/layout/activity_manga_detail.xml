@@ -112,6 +112,5 @@
             android:textSize="17sp"
             android:textAlignment="center"
             tools:ignore="RtlCompat"></TextView>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

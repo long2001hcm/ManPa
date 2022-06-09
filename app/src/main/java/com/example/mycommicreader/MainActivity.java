@@ -4,12 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,21 +14,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.mycommicreader.model.LatestChapter;
+import com.example.mycommicreader.model.Chapter;
+import com.example.mycommicreader.model.ChapterBread;
 import com.example.mycommicreader.model.Manga;
 import com.example.mycommicreader.model.MangaBread;
 import com.example.mycommicreader.modelview.MangaApiService;
 import com.example.mycommicreader.databinding.ActivityMainBinding;
 import com.example.mycommicreader.view.MangaAdapter;
 
-import com.example.mycommicreader.model.MangaBread;
-import com.example.mycommicreader.modelview.MangaApiService;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNoteListener {
@@ -76,8 +69,24 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                 } else {
                     m = MangaApiService.apiService.findManga(title).execute();
                 }
+
                 mangaList.removeAll(mangaList);
                 mangaList.addAll(m.body().getData());
+
+//                get followed manga
+//                List<String> listMangaID = new ArrayList<>();
+//                list.add("a96676e5-8ae2-425e-b549-7f15dd34a6d8");
+//                list.add("37f5cce0-8070-4ada-96e5-fa24b1bd4ff9");
+//                m = MangaApiService.apiService.getFollowedManga(listMangaID).execute();
+
+//                get chapter list
+//                Response<ChapterBread> c = MangaApiService.apiService.getChapter("6b1eb93e-473a-4ab3-9922-1a66d2a29a4a").execute();
+//                List<Chapter> listChapter = c.body().getChapter();
+//                for (Chapter l:listChapter) {
+//                    Log.d("DEBUG", l.getChapter() + " " + l.getChapterTitle() + " " + l.getChapterPublishDate());
+//                }
+
+//                get latest chapter
 //                for (Manga manga:mangaList) {
 //                    Response<LatestChapter> l = MangaApiService.apiService.getLatestChapter(manga.getID()).execute();
 //                    try {

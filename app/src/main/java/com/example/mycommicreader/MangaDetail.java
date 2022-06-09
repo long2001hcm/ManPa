@@ -1,7 +1,9 @@
 package com.example.mycommicreader;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,15 +12,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.example.mycommicreader.databinding.ActivityMangaDetailBinding;
+import com.example.mycommicreader.model.Chapter;
+import com.example.mycommicreader.model.ChapterBread;
+import com.example.mycommicreader.model.MangaBread;
+import com.example.mycommicreader.modelview.MangaApiService;
 import com.example.mycommicreader.view.MangaAdapter;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Response;
 
 public class MangaDetail extends AppCompatActivity {
+    ProgressDialog progress;
     private ActivityMangaDetailBinding binding;
+    private ArrayAdapter<String> arrayAdapter;
     private String id;
     private String name;
     private String coverFileName;
@@ -101,4 +114,5 @@ public class MangaDetail extends AppCompatActivity {
         }
         return true;
     }
+
 }
