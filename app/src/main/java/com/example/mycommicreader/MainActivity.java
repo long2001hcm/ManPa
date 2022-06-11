@@ -18,17 +18,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        MangaApiService.apiService.getManga().enqueue(new Callback<MangaBread>() {
-            @Override
-            public void onResponse(Call<MangaBread> call, Response<MangaBread> response) {
-                Log.d("DEBUG", response.body().getData().size() + "");
-            }
-
-            @Override
-            public void onFailure(Call<MangaBread> call, Throwable t) {
-
-            }
-        });
     }
 }
