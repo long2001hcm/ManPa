@@ -23,4 +23,9 @@
             android:id="@+id/action_detailManga_to_listmanga"
             app:destination="@id/listmanga" />
     </fragment>
+    <fragment
+        android:id="@+id/login"
+        android:name="com.example.mycommicreader.view.Login"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>
