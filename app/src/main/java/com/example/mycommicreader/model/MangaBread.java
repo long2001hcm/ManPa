@@ -12,24 +12,12 @@ public class MangaBread implements Serializable {
     @SerializedName("result")
     private String rs;
 
-    public class Manga {
-        @SerializedName("id")
-        private String id;
 
-        public Manga(String id) {
-            this.id = id;
-        }
-        public String getID() {
-            return id;
-        }
-        public void setId() {
-            this.id = id;
-        }
-    }
 
     public MangaBread(ArrayList<Manga> data) {
         this.data = data;
     }
+
     public List<Manga> getData() {
         return data;
     }
