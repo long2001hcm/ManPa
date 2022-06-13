@@ -2,6 +2,7 @@ package com.example.mycommicreader.modelview;
 
 import com.example.mycommicreader.model.Chapter;
 import com.example.mycommicreader.model.ChapterBread;
+import com.example.mycommicreader.model.ChapterData;
 import com.example.mycommicreader.model.LatestChapter;
 
 import com.example.mycommicreader.model.MangaBread;
@@ -40,6 +41,9 @@ public interface MangaApiService {
 
     @GET("manga/{mangaID}/feed?translatedLanguage[]=en&order[chapter]=desc&limit=500")
     Call<ChapterBread> getChapter(@Path("mangaID") String mangaID);
+
+    @GET("at-home/server/{chapterID}")
+    Call<ChapterData> getChapterImage(@Path("chapterID") String chapterID);
 
     @GET("chapter?translatedLanguage[]=en&order[chapter]=desc&limit=1")
     Call<LatestChapter> getLatestChapter(@Query("manga") String id);
