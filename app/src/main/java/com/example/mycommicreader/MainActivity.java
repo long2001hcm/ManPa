@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         getSupportActionBar().setTitle("Popular manga");
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-        mangaAdapter = new MangaAdapter(mangaList, this);
+        mangaAdapter = new MangaAdapter(mangaList, this, this);
         setContentView(view);
         new MainActivity.GetManga("").execute();
 

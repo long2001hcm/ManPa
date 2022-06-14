@@ -21,6 +21,7 @@ import com.example.mycommicreader.model.ChapterBread;
 import com.example.mycommicreader.model.MangaBread;
 import com.example.mycommicreader.modelview.MangaApiService;
 import com.example.mycommicreader.view.MangaAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -67,8 +68,10 @@ public class MangaDetail extends AppCompatActivity {
             binding.status.setText("Status: " + status + ".");
             binding.year.setText("Year: " + year + ".");
             getSupportActionBar().setTitle("Manga Details");
-            new MangaDetail.DownloadImageTask(binding.cover)
-                    .execute("https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg");
+//            new MangaDetail.DownloadImageTask(binding.cover)
+//                    .execute("https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg");
+            String url = "https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg";
+            Picasso.get().load(url).into(binding.cover);
         }
         binding.followButton.setOnClickListener(new View.OnClickListener() {
             @Override
