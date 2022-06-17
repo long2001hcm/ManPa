@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.rgb(255, 199, 249)));
-        getSupportActionBar().setTitle("Popular manga");
+        getSupportActionBar().setTitle("Recently updated");
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         mangaAdapter = new MangaAdapter(mangaList, this, this);

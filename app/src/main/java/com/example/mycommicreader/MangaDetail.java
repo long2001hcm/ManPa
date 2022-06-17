@@ -71,7 +71,7 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
             binding.type.setText("Demographic: " + type + ".");
             binding.status.setText("Status: " + status + ".");
             binding.year.setText("Year: " + year + ".");
-            getSupportActionBar().setTitle("Manga Details");
+            getSupportActionBar().setTitle("Manga details");
 //            new MangaDetail.DownloadImageTask(binding.cover)
 //                    .execute("https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg");
             String url = "https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg";
@@ -130,6 +130,8 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
     public void onNoteClick(int position) {
         Intent intent = new Intent(MangaDetail.this, ReadChapter.class);
         intent.putExtra("id", chapterList.get(position).getId());
+        intent.putExtra("chapter", chapterList.get(position).getChapter());
+        intent.putExtra("title", chapterList.get(position).getChapterTitle());
         startActivityForResult(intent, 2);
     }
     @Override

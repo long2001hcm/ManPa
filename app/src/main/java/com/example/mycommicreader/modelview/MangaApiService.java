@@ -30,7 +30,7 @@ public interface MangaApiService {
             .build()
             .create(MangaApiService.class);
 
-    @GET("manga?includes[]=cover_art&includes[]=author&order[followedCount]=desc&contentRating[]=safe&limit=100")
+    @GET("manga?includes[]=cover_art&includes[]=author&order[latestUploadedChapter]=desc&contentRating[]=safe&limit=100")
     Call<MangaBread> getManga();
 
     @GET("manga?includes[]=cover_art&includes[]=author&order[followedCount]=desc&limit=100")
