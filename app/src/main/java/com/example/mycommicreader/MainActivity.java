@@ -174,8 +174,6 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         try {
             if (requestCode == 2) {
                 if (resultCode == RESULT_OK) {
-                    String name = data.getStringExtra("DocID");
-                    idUser = name;
                     Log.d("DEBUG", idUser);
                     getDataStore(idUser);
                 }

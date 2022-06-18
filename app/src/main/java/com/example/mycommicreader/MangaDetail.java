@@ -95,15 +95,8 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
             binding.type.setText("Demographic: " + type + ".");
             binding.status.setText("Status: " + status + ".");
             binding.year.setText("Year: " + year + ".");
-            try {
-                for (String s : followed) {
-                    if (s.equals(id)) {
-                        binding.followButton.setText("Followed");
-                    }
-
-                }
-            } catch (Exception e) {
-                Log.d("DEBUG", e.getMessage());
+            if (followed.indexOf(id)>=0) {
+                binding.followButton.setText("Followed");
             }
             getSupportActionBar().setTitle("Manga detail");
             String url = "https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg";
