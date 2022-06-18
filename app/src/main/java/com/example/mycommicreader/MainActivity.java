@@ -165,6 +165,9 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         intent.putExtra("year", m.getYear());
         intent.putExtra("UserID",idUser);
         intent.putExtra("DocumentID",m.getDocumentID());
+        if(followed.indexOf(m.getID())>=0){
+            Log.d("DEBUG","Followed");
+        }
         startActivityForResult(intent, 2);
     }
 
@@ -173,8 +176,8 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
-                String name = data.getStringExtra("DocID");
-                idUser = name;
+//                String name = data.getStringExtra("DocID");
+//                idUser = name;
                 Log.d("DEBUG",idUser);
                 getDataStore(idUser);
             }
@@ -226,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
     }
 
     private void getDataStore(String IDUser){
+        followed = new ArrayList<>();
         firestore.collection(IDUser)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -233,7 +237,8 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                followed.add(document.getData().get("IDManga").toString());
+                                String IDManga = document.getData().get("IDManga").toString();
+                                followed.add(IDManga);
                                 Log.d("DEBUG", document.getId() + " => " + document.getData().get("IDManga").toString());
                             }
                             Log.d("DEBUG",  " => " + followed.size());
