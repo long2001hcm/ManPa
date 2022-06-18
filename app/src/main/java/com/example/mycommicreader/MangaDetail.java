@@ -1,5 +1,6 @@
 package com.example.mycommicreader;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -23,11 +24,20 @@ import com.example.mycommicreader.model.MangaBread;
 import com.example.mycommicreader.modelview.MangaApiService;
 import com.example.mycommicreader.view.ChapterAdapter;
 import com.example.mycommicreader.view.MangaAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Response;
 
@@ -44,12 +54,17 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
     private String type;
     private String status;
     private String year;
+    private String IDUser;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore firestore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_detail);
         binding = ActivityMangaDetailBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(view);
         chapterAdapter = new ChapterAdapter(chapterList, this);
@@ -65,6 +80,7 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
             type = intent.getStringExtra("type");
             status = intent.getStringExtra("status");
             year = intent.getStringExtra("year");
+            IDUser = intent.getStringExtra("UserID");
             binding.title.setText(name + ".");
             binding.tag.setText("Tags: " + tag + ".");
             binding.author.setText("Author: " + author + ".");
@@ -83,6 +99,7 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
             public void onClick(View view) {
                 if (binding.followButton.getText().toString() == "Follow") {
                     binding.followButton.setText("Followed");
+                    postDataStore(IDUser,id);
                 } else {
                     binding.followButton.setText("Follow");
                 }
@@ -142,6 +159,24 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
                 return true;
         }
         return true;
+    }
+    private void postDataStore(String idUser,String idManga){
+        Map<String,Object> data = new HashMap<>();
+        data.put("IDManga",idManga);
+        firestore.collection(idUser)
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("DEBUG", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("DEBUG", "Error adding document", e);
+                    }
+                });
     }
 
 }

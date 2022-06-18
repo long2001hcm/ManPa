@@ -24,8 +24,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
     private FirebaseFirestore firestore;
     private ActivityLoginBinding binding;
     @Override
@@ -34,14 +32,15 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-        Button btn_login = binding.login;
-        EditText email =binding.email;
-        EditText pass = binding.password;
-        btn_login.setOnClickListener(new View.OnClickListener() {
+        setContentView(view);
+        mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        binding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String em = email.getText().toString();
-                String pa = pass.getText().toString();
+                Log.d("DEBUG", "signInWithEmail:success");
+                String em = binding.email.getText().toString();
+                String pa = binding.password.getText().toString();
                 login(em,pa);
 //                Navigation.findNavController(view).navigate(R.id.list);
             }
@@ -59,6 +58,7 @@ public class Login extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent i = new Intent();
                             i.putExtra("userID",user.getUid());
+                            setResult(RESULT_OK,i);
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.

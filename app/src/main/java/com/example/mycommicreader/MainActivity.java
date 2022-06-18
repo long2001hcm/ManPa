@@ -1,5 +1,7 @@
 package com.example.mycommicreader;
 
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
@@ -9,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +26,12 @@ import com.example.mycommicreader.model.MangaBread;
 import com.example.mycommicreader.modelview.MangaApiService;
 import com.example.mycommicreader.databinding.ActivityMainBinding;
 import com.example.mycommicreader.view.MangaAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +44,10 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
     private ActivityMainBinding binding;
     private MangaAdapter mangaAdapter;
     List<Manga> mangaList = new ArrayList<>();
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore firestore;
+    ArrayList<String> followed;
+    private String idUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +58,17 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         View view = binding.getRoot();
         mangaAdapter = new MangaAdapter(mangaList, this, this);
         setContentView(view);
+        mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        followed = new ArrayList<>();
         new MainActivity.GetManga("").execute();
-
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this,Login.class);
+                startActivityForResult(i, 3);
+            }
+        });
 
     }
 
@@ -141,8 +163,24 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         intent.putExtra("type", m.getType());
         intent.putExtra("status", m.getStatus());
         intent.putExtra("year", m.getYear());
+        intent.putExtra("UserID",idUser);
         startActivityForResult(intent, 2);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //insert
+        if (requestCode == 3) {
+            if (resultCode == RESULT_OK) {
+                String name = data.getStringExtra("userID");
+                idUser = name;
+                Log.d("DEBUG",idUser);
+                getDataStore(idUser);
+            }
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -175,5 +213,24 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
             }
         });
         return true;
+    }
+
+    private void getDataStore(String IDUser){
+        firestore.collection(IDUser)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                followed.add(document.getData().get("IDManga").toString());
+                                Log.d("DEBUG", document.getId() + " => " + document.getData().get("IDManga").toString());
+                            }
+                            Log.d("DEBUG",  " => " + followed.size());
+                        } else {
+                            Log.w("DEBUG", "Error getting documents.", task.getException());
+                        }
+                    }
+                });
     }
 }
