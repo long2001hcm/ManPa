@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu   xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/back"
+        android:icon="@drawable/ic_baseline_arrow_back_24"
+        android:title="Button Back"
+        app:actionViewClass="androidx.appcompat.widget.ButtonBarLayout"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/pre_chap"
+        android:icon="@drawable/ic_baseline_arrow_back_ios_24"
+        android:title="Button Pre"
+        app:actionViewClass="androidx.appcompat.widget.ButtonBarLayout"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/next_chap"
+        android:icon="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:title="Button next"
+        app:actionViewClass="androidx.appcompat.widget.ButtonBarLayout"
+        app:showAsAction="always" />
+</menu>
