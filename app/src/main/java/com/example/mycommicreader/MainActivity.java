@@ -7,6 +7,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -260,6 +261,9 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                 Intent i = new Intent(MainActivity.this,Login.class);
                 startActivityForResult(i, 3);
                 return true;
+            case R.id.about_item:
+                About();
+                return true;
 
         }
         return super.onOptionsItemSelected(item);
@@ -283,5 +287,19 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                         }
                     }
                 });
+    }
+
+    void About() {
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
+        dlgAlert.setTitle("About");
+        String s = "Creator:\n" +
+                "   Do Thanh Long\n" +
+                "   Duong Xuan Ngoc Phong\n" +
+                "   Nguyen Phan Minh Nhat\n\n" +
+                "All manga credit belongs to MangaDex (https://mangadex.org/)";
+        dlgAlert.setMessage(s);
+        dlgAlert.setPositiveButton("OK", null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
     }
 }
