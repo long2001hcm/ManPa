@@ -24,13 +24,17 @@ import com.example.mycommicreader.model.MangaBread;
 import com.example.mycommicreader.modelview.MangaApiService;
 import com.example.mycommicreader.view.ChapterAdapter;
 import com.example.mycommicreader.view.MangaAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
@@ -55,6 +59,7 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
     private String status;
     private String year;
     private String IDUser;
+    private String DocumentID;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
     @Override
@@ -81,6 +86,7 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
             status = intent.getStringExtra("status");
             year = intent.getStringExtra("year");
             IDUser = intent.getStringExtra("UserID");
+            DocumentID = intent.getStringExtra("DocumentID");
             binding.title.setText(name + ".");
             binding.tag.setText("Tags: " + tag + ".");
             binding.author.setText("Author: " + author + ".");
@@ -102,6 +108,7 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
                     postDataStore(IDUser,id);
                 } else {
                     binding.followButton.setText("Follow");
+                    DeleteDataStore(IDUser,id);
                 }
             }
         });
@@ -155,6 +162,9 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Intent i = new Intent();
+                i.putExtra("DocID",DocumentID);
+                setResult(RESULT_OK,i);
                 finish();
                 return true;
         }
@@ -169,6 +179,7 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("DEBUG", "DocumentSnapshot added with ID: " + documentReference.getId());
+                        DocumentID = documentReference.getPath();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -178,5 +189,24 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
                     }
                 });
     }
-
+    private void DeleteDataStore(String idUser,String idManga){
+        firestore.collection(IDUser)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("IDManga").toString() == idManga){
+                                    document.getDocumentReference("IDManga").delete();
+                                    Log.d("DEBUG","UnFollow");
+                                }
+                                Log.d("DEBUG", document.getId() + " => " + document.getData().get("IDManga").toString());
+                            }
+                        } else {
+                            Log.w("DEBUG", "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+    }
 }

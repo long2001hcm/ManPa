@@ -164,13 +164,22 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         intent.putExtra("status", m.getStatus());
         intent.putExtra("year", m.getYear());
         intent.putExtra("UserID",idUser);
+        intent.putExtra("DocumentID",m.getDocumentID());
         startActivityForResult(intent, 2);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //insert
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                String name = data.getStringExtra("DocID");
+                idUser = name;
+                Log.d("DEBUG",idUser);
+                getDataStore(idUser);
+            }
+        }
+
         if (requestCode == 3) {
             if (resultCode == RESULT_OK) {
                 String name = data.getStringExtra("userID");
@@ -179,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                 getDataStore(idUser);
             }
         }
+
     }
 
 
