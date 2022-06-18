@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.example.mycommicreader.model.Chapter;
 import com.example.mycommicreader.model.ChapterBread;
+import com.example.mycommicreader.model.ChapterData;
 import com.example.mycommicreader.model.Manga;
 import com.example.mycommicreader.model.MangaBread;
 import com.example.mycommicreader.modelview.MangaApiService;
@@ -38,10 +39,10 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.rgb(255, 199, 249)));
-        getSupportActionBar().setTitle("Popular manga");
+        getSupportActionBar().setTitle("Recently updated");
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-        mangaAdapter = new MangaAdapter(mangaList, this);
+        mangaAdapter = new MangaAdapter(mangaList, this, this);
         setContentView(view);
         new MainActivity.GetManga("").execute();
 
@@ -79,12 +80,22 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
 //                list.add("37f5cce0-8070-4ada-96e5-fa24b1bd4ff9");
 //                m = MangaApiService.apiService.getFollowedManga(listMangaID).execute();
 
+
 //                get chapter list
 //                Response<ChapterBread> c = MangaApiService.apiService.getChapter("6b1eb93e-473a-4ab3-9922-1a66d2a29a4a").execute();
 //                List<Chapter> listChapter = c.body().getChapter();
 //                for (Chapter l:listChapter) {
-//                    Log.d("DEBUG", l.getChapter() + " " + l.getChapterTitle() + " " + l.getChapterPublishDate());
+//                    Log.d("DEBUG", l.getId() + " " + l.getChapter() + " " + l.getChapterTitle() + " " + l.getChapterPublishDate());
 //                }
+
+
+//                get chapter image
+//                Response<ChapterData> c = MangaApiService.apiService.getChapterImage("1791d49c-8bd4-452f-9dc9-9ca6145b147a").execute();
+//                List<String> listUrl = c.body().getChapterImageUrl();
+//                for (String s: listUrl) {
+//                    Log.d("DEBUG", s);
+//                }
+
 
 //                get latest chapter
 //                for (Manga manga:mangaList) {
