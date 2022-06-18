@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                     m = MangaApiService.apiService.getPopularManga().execute();
                 } else if (title == "Follow") {
                     getDataStore(idUser);
-                    Log.d("IDUser", idUser);
                     m = MangaApiService.apiService.getFollowedManga(followed).execute();
                 } else {
                     m = MangaApiService.apiService.findManga(title).execute();
@@ -174,7 +173,10 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         try {
             if (requestCode == 2) {
                 if (resultCode == RESULT_OK) {
-                    Log.d("DEBUG", idUser);
+                    String id = data.getStringExtra("mangaID");
+                    if (id != "" && id != null) {
+                        followed.removeAll(followed);
+                    }
                     getDataStore(idUser);
                 }
             }
@@ -264,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
     }
 
     private void getDataStore(String IDUser){
-        followed = new ArrayList<>();
         firestore.collection(IDUser)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
