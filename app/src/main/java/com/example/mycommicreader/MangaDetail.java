@@ -130,14 +130,18 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
     public void onNoteClick(int position) {
         Intent intent = new Intent(MangaDetail.this, ReadChapter.class);
         intent.putExtra("id", chapterList.get(position).getId());
-        intent.putExtra("chapter", chapterList.get(position).getChapter());
-        intent.putExtra("title", chapterList.get(position).getChapterTitle());
         intent.putExtra("position", position);
         ArrayList<String> l = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
+        ArrayList<String> n = new ArrayList<>();
         for (Chapter c:chapterList) {
             l.add(c.getId());
+            t.add(c.getChapterTitle());
+            n.add(c.getChapter());
         }
         intent.putStringArrayListExtra("chapterID", l);
+        intent.putStringArrayListExtra("title", t);
+        intent.putStringArrayListExtra("chapter", n);
         startActivityForResult(intent, 2);
     }
     @Override

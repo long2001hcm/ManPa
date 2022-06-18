@@ -36,8 +36,8 @@ public class ReadChapter extends AppCompatActivity {
     private ActivityReadChapterBinding binding;
     ProgressDialog progress;
     private String id;
-    private String chapter;
-    private String title;
+    private List<String> chapter;
+    private List<String> title;
     private int position;
     private boolean hide = true;
     private List<String> chapterID = new ArrayList<>();
@@ -69,10 +69,15 @@ public class ReadChapter extends AppCompatActivity {
 
         if (intent != null) {
             id = intent.getStringExtra("id");
-            chapter = intent.getStringExtra("chapter");
-            title = intent.getStringExtra("title");
+            chapter = intent.getStringArrayListExtra("chapter");
+            title = intent.getStringArrayListExtra("title");
             position = intent.getIntExtra("position", 0);
             chapterID = intent.getStringArrayListExtra("chapterID");
+            if (chapter.get(position) != null) {
+                binding.chapter.setText(chapter.get(position));
+            } else {
+                binding.chapter.setText(title.get(position));
+            }
             new ReadChapter.GetImages(chapterID.get(position)).execute();
         }
 
@@ -158,6 +163,11 @@ public class ReadChapter extends AppCompatActivity {
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (position != chapterID.size()-1) {
                         position = position + 1;
+                        if (chapter.get(position) != null) {
+                            binding.chapter.setText(chapter.get(position));
+                        } else {
+                            binding.chapter.setText(title.get(position));
+                        }
                         new ReadChapter.GetImages(chapterID.get(position)).execute();
                     }
                     return false;
@@ -170,6 +180,11 @@ public class ReadChapter extends AppCompatActivity {
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (position != 0) {
                         position = position - 1;
+                        if (chapter.get(position) != null) {
+                            binding.chapter.setText(chapter.get(position));
+                        } else {
+                            binding.chapter.setText(title.get(position));
+                        }
                         new ReadChapter.GetImages(chapterID.get(position)).execute();
                     }
                     return false;
