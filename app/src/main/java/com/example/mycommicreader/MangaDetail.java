@@ -191,20 +191,26 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
     }
     private void DeleteDataStore(String idUser,String idManga){
         firestore.collection(IDUser)
+                .whereEqualTo("IDManga",idManga)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document.getData().get("IDManga").toString() == idManga){
-                                    document.getDocumentReference("IDManga").delete();
-                                    Log.d("DEBUG","UnFollow");
-                                }
-                                Log.d("DEBUG", document.getId() + " => " + document.getData().get("IDManga").toString());
+                                Log.d("DEBUG", document.getId() + " => " + document.getData());
+                                firestore.collection(IDUser)
+                                        .document(document.getId())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Log.d("DEBUG", "Done delete!!");
+                                            }
+                                        });
                             }
                         } else {
-                            Log.w("DEBUG", "Error getting documents.", task.getException());
+                            Log.d("DEBUG", "Error getting documents: ", task.getException());
                         }
                     }
                 });
