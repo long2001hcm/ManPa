@@ -2,27 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/commicreader"
-    app:startDestination="@id/listmanga">
+    android:id="@+id/commicreader">
 
-    <fragment
-        android:id="@+id/listmanga"
-        android:name="com.example.mycommicreader.view.ListManga"
-        android:label="fragment_listmanga"
-        tools:layout="@layout/fragment_listmanga" >
-        <action
-            android:id="@+id/action_listmanga_to_detailManga"
-            app:destination="@id/detailManga" />
-    </fragment>
-    <fragment
-        android:id="@+id/detailManga"
-        android:name="com.example.mycommicreader.view.DetailManga"
-        android:label="fragment_detail_manga"
-        tools:layout="@layout/fragment_detail_manga" >
-        <action
-            android:id="@+id/action_detailManga_to_listmanga"
-            app:destination="@id/listmanga" />
-    </fragment>
     <fragment
         android:id="@+id/login"
         android:name="com.example.mycommicreader.view.Login"

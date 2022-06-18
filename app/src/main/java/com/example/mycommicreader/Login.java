@@ -1,20 +1,18 @@
-package com.example.mycommicreader.view;
-
-import android.os.Bundle;
+package com.example.mycommicreader;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.mycommicreader.R;
+import com.example.mycommicreader.databinding.ActivityLoginBinding;
+import com.example.mycommicreader.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,28 +22,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
-public class Login extends Fragment {
+public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private FirebaseFirestore firestore;
-
+    private ActivityLoginBinding binding;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View e = inflater.inflate(R.layout.fragment_login, container, false);
-        Button btn_login = e.findViewById(R.id.login);
-        EditText email = e.findViewById(R.id.email);
-        EditText pass = e.findViewById(R.id.password);
+        setContentView(R.layout.activity_login);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        Button btn_login = binding.login;
+        EditText email =binding.email;
+        EditText pass = binding.password;
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +46,6 @@ public class Login extends Fragment {
 //                Navigation.findNavController(view).navigate(R.id.list);
             }
         });
-        return  e;
     }
     private void login(String email, String password){
         mAuth.signInWithEmailAndPassword(email,password)
@@ -65,13 +55,15 @@ public class Login extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("DEBUG", "signInWithEmail:success");
-                            Toast.makeText(getContext().getApplicationContext(), "Authentication successful.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "Authentication successful.",Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
-
+                            Intent i = new Intent();
+                            i.putExtra("userID",user.getUid());
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("DEBUG", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(getContext().getApplicationContext(), "Authentication failed.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
