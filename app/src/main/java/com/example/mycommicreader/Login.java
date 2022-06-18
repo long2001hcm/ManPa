@@ -28,23 +28,27 @@ public class Login extends AppCompatActivity {
     private ActivityLoginBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
-        mAuth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
-        binding.login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("DEBUG", "signInWithEmail:success");
-                String em = binding.email.getText().toString();
-                String pa = binding.password.getText().toString();
-                login(em,pa);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_login);
+            binding = ActivityLoginBinding.inflate(getLayoutInflater());
+            View view = binding.getRoot();
+            setContentView(view);
+            mAuth = FirebaseAuth.getInstance();
+            firestore = FirebaseFirestore.getInstance();
+            binding.login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("DEBUG", "signInWithEmail:success");
+                    String em = binding.email.getText().toString();
+                    String pa = binding.password.getText().toString();
+                    login(em, pa);
 //                Navigation.findNavController(view).navigate(R.id.list);
-            }
-        });
+                }
+            });
+        } catch (Exception e) {
+            Log.d("DEBUG", e.getMessage());
+        }
     }
     private void login(String email, String password){
         mAuth.signInWithEmailAndPassword(email,password)

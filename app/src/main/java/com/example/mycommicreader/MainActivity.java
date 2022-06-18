@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
     ArrayList<String> followed;
-    private String idUser;
+    private static String idUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,14 +61,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         followed = new ArrayList<>();
-        new MainActivity.GetManga("").execute();
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,Login.class);
-                startActivityForResult(i, 3);
-            }
-        });
+        new MainActivity.GetManga("update").execute();
 
     }
 
@@ -88,8 +81,14 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
 
             try {
                 Response<MangaBread> m;
-                if (title == "") {
+                if (title == "update") {
                     m = MangaApiService.apiService.getManga().execute();
+                } else if (title == "popular") {
+                    m = MangaApiService.apiService.getPopularManga().execute();
+                } else if (title == "Follow") {
+                    getDataStore(idUser);
+                    Log.d("IDUser", idUser);
+                    m = MangaApiService.apiService.getFollowedManga(followed).execute();
                 } else {
                     m = MangaApiService.apiService.findManga(title).execute();
                 }
@@ -165,33 +164,34 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         intent.putExtra("year", m.getYear());
         intent.putExtra("UserID",idUser);
         intent.putExtra("DocumentID",m.getDocumentID());
-        if(followed.indexOf(m.getID())>=0){
-            Log.d("DEBUG","Followed");
-        }
+        intent.putStringArrayListExtra("followed", followed);
         startActivityForResult(intent, 2);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2) {
-            if (resultCode == RESULT_OK) {
-//                String name = data.getStringExtra("DocID");
-//                idUser = name;
-                Log.d("DEBUG",idUser);
-                getDataStore(idUser);
+        try {
+            if (requestCode == 2) {
+                if (resultCode == RESULT_OK) {
+                    String name = data.getStringExtra("DocID");
+                    idUser = name;
+                    Log.d("DEBUG", idUser);
+                    getDataStore(idUser);
+                }
             }
-        }
 
-        if (requestCode == 3) {
-            if (resultCode == RESULT_OK) {
-                String name = data.getStringExtra("userID");
-                idUser = name;
-                Log.d("DEBUG",idUser);
-                getDataStore(idUser);
+            if (requestCode == 3) {
+                if (resultCode == RESULT_OK) {
+                    String name = data.getStringExtra("userID");
+                    idUser = name;
+                    Log.d("DEBUG", idUser);
+                    getDataStore(idUser);
+                }
             }
+        } catch (Exception e) {
+            Log.d("DEBUG", e.getMessage());
         }
-
     }
 
 
@@ -225,7 +225,44 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                 return true;
             }
         });
+
+        MenuItem menuItem1 = menu.findItem(R.id.menu);
+        menuItem1.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                return false;
+            }
+        });
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.followed_item:
+                getSupportActionBar().setTitle("Following");
+                try {
+                    new MainActivity.GetManga("Follow").execute();
+                } catch (Exception e) {
+
+                }
+                return true;
+            case R.id.popular_item:
+                getSupportActionBar().setTitle("Popular mangas");
+                new MainActivity.GetManga("popular").execute();
+                return true;
+            case R.id.updated_item:
+                getSupportActionBar().setTitle("Recently updated");
+                new MainActivity.GetManga("update").execute();
+                return true;
+            case R.id.login_item:
+                Intent i = new Intent(MainActivity.this,Login.class);
+                startActivityForResult(i, 3);
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void getDataStore(String IDUser){

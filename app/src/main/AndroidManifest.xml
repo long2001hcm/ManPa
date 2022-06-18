@@ -13,19 +13,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyCommicReader"
         tools:targetApi="31">
         <activity
             android:name=".Login"
+            android:theme="@style/Theme.MyCommicReader"
             android:exported="false" />
         <activity
             android:name=".ReadChapter"
+            android:theme="@style/Theme.Chapter"
             android:exported="false" />
         <activity
             android:name=".MangaDetail"
+            android:theme="@style/Theme.MyCommicReader"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:theme="@style/Theme.MyCommicReader"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

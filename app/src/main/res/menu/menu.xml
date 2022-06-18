@@ -7,4 +7,29 @@
         android:title="Search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/menu"
+        android:icon="@drawable/ic_baseline_menu_24"
+        android:title="Search"
+        app:actionViewClass="androidx.appcompat.widget.MenuPopupWindow$MenuDropDownListView"
+        app:showAsAction="ifRoom|collapseActionView" >
+        <menu>
+            <item android:id="@+id/followed_item"
+                android:title="Followed">
+
+            </item>
+            <item android:id="@+id/popular_item"
+                android:title="Popular">
+
+            </item>
+            <item android:id="@+id/updated_item"
+                android:title="Recently Updated">
+
+            </item>
+            <item android:id="@+id/login_item"
+                android:title="Login">
+
+            </item>
+        </menu>
+    </item>
 </menu>
