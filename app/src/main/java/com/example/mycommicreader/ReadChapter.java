@@ -1,6 +1,10 @@
 package com.example.mycommicreader;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.ButtonBarLayout;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,6 +13,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +38,9 @@ public class ReadChapter extends AppCompatActivity {
     private String id;
     private String chapter;
     private String title;
+    private int position;
+    private boolean hide = true;
+    private List<String> chapterID = new ArrayList<>();
     private ImageAdapter imageAdapter;
     List<String> listUrl = new ArrayList<>();
     @Override
@@ -47,35 +56,41 @@ public class ReadChapter extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        getSupportActionBar().hide();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+//        getSupportActionBar().hide();
+//
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+            setSupportActionBar(binding.chapBar);
+            getSupportActionBar().setTitle(null);
+        } catch (Exception e) {
+            Log.d("DEBUG", e.getMessage());
+        }
         Intent intent = getIntent();
 
         if (intent != null) {
             id = intent.getStringExtra("id");
             chapter = intent.getStringExtra("chapter");
             title = intent.getStringExtra("title");
-            if (chapter == null) {
-                chapter = "";
-            } else {
-                chapter = "Chapter " + chapter;
+            position = intent.getIntExtra("position", 0);
+            chapterID = intent.getStringArrayListExtra("chapterID");
+            new ReadChapter.GetImages(chapterID.get(position)).execute();
+        }
+
+        binding.image.setOnTouchListener(new OnSwipeTouchListener(ReadChapter.this) {
+            public void onSwipeTop() {
+                getSupportActionBar().hide();
+            }
+            public void onSwipeRight() {
+
+            }
+            public void onSwipeLeft() {
+
+            }
+            public void onSwipeBottom() {
+                getSupportActionBar().show();
             }
 
-            if (title == null) {
-                title = "";
-            }
-            
-            String s = "";
-            if (title != "" && chapter != "") {
-                s = chapter + ". " + title;
-            } else {
-                s = chapter + title;
-            }
-            getSupportActionBar().setTitle(s);
-            new ReadChapter.GetImages(id).execute();
-        }
+        });
 
     }
     private class GetImages extends AsyncTask<Void, Void, Void> {
@@ -92,6 +107,7 @@ public class ReadChapter extends AppCompatActivity {
         protected Void doInBackground (Void... devices) {
             try {
                 Response<ChapterData> c = MangaApiService.apiService.getChapterImage(id).execute();
+                listUrl.removeAll(listUrl);
                 listUrl.addAll(c.body().getChapterImageUrl());
 
             } catch(Exception e) {
@@ -119,6 +135,50 @@ public class ReadChapter extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chap_menu, menu);
+        try {
+            MenuItem menuItem = menu.findItem(R.id.back);
+            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    finish();
+                    return false;
+                }
+            });
+
+            MenuItem menuItem1 = menu.findItem(R.id.pre_chap);
+            menuItem1.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    if (position != chapterID.size()-1) {
+                        position = position + 1;
+                        new ReadChapter.GetImages(chapterID.get(position)).execute();
+                    }
+                    return false;
+                }
+            });
+
+            MenuItem menuItem2 = menu.findItem(R.id.next_chap);
+            menuItem2.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    if (position != 0) {
+                        position = position - 1;
+                        new ReadChapter.GetImages(chapterID.get(position)).execute();
+                    }
+                    return false;
+                }
+            });
+
+
+        } catch (Exception e) {
+            Log.d("DEBUG", e.getMessage());
         }
         return true;
     }
