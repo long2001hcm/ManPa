@@ -18,9 +18,12 @@ import android.widget.ImageView;
 import com.example.mycommicreader.databinding.ActivityMangaDetailBinding;
 import com.example.mycommicreader.model.Chapter;
 import com.example.mycommicreader.model.ChapterBread;
+import com.example.mycommicreader.model.Manga;
 import com.example.mycommicreader.model.MangaBread;
 import com.example.mycommicreader.modelview.MangaApiService;
+import com.example.mycommicreader.view.ChapterAdapter;
 import com.example.mycommicreader.view.MangaAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,10 +31,11 @@ import java.util.List;
 
 import retrofit2.Response;
 
-public class MangaDetail extends AppCompatActivity {
+public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnNoteListener {
     ProgressDialog progress;
     private ActivityMangaDetailBinding binding;
-    private ArrayAdapter<String> arrayAdapter;
+    List<Chapter> chapterList = new ArrayList<>();
+    private ChapterAdapter chapterAdapter;
     private String id;
     private String name;
     private String coverFileName;
@@ -48,6 +52,7 @@ public class MangaDetail extends AppCompatActivity {
         View view = binding.getRoot();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(view);
+        chapterAdapter = new ChapterAdapter(chapterList, this);
         binding.followButton.setText("Follow");
         Intent intent = getIntent();
 
@@ -66,9 +71,12 @@ public class MangaDetail extends AppCompatActivity {
             binding.type.setText("Demographic: " + type + ".");
             binding.status.setText("Status: " + status + ".");
             binding.year.setText("Year: " + year + ".");
-            getSupportActionBar().setTitle("Manga Details");
-            new MangaDetail.DownloadImageTask(binding.cover)
-                    .execute("https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg");
+            getSupportActionBar().setTitle("Manga details");
+//            new MangaDetail.DownloadImageTask(binding.cover)
+//                    .execute("https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg");
+            String url = "https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg";
+            Picasso.get().load(url).into(binding.cover);
+            new MangaDetail.GetChapters(id).execute();
         }
         binding.followButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,29 +89,50 @@ public class MangaDetail extends AppCompatActivity {
             }
         });
     }
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
+    private class GetChapters extends AsyncTask<Void, Void, Void> {
+        private String id;
+        public GetChapters(String id) {
+            this.id = id;
+        }
+        @Override
+        protected  void onPreExecute () {
+            progress = ProgressDialog.show(MangaDetail.this, "Loading...", "Please Wait!!!");
         }
 
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
+        @Override
+        protected Void doInBackground (Void... devices) {
             try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
+//                get chapter list
+                Response<ChapterBread> c = MangaApiService.apiService.getChapter(this.id).execute();
+                chapterList.addAll(c.body().getChapter());
+
+            } catch(Exception e) {
+                Log.d("DEBUG", e.toString());
             }
-            return mIcon11;
+
+            return null;
         }
 
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+
+
+
+        @Override
+        protected void onPostExecute (Void result) {
+            super.onPostExecute(result);
+            binding.chapterList.setAdapter(chapterAdapter);
+            binding.chapterList.setLayoutManager(new GridLayoutManager(getApplicationContext(), 5));
+            progress.dismiss();
+
         }
+    }
+
+    @Override
+    public void onNoteClick(int position) {
+        Intent intent = new Intent(MangaDetail.this, ReadChapter.class);
+        intent.putExtra("id", chapterList.get(position).getId());
+        intent.putExtra("chapter", chapterList.get(position).getChapter());
+        intent.putExtra("title", chapterList.get(position).getChapterTitle());
+        startActivityForResult(intent, 2);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
