@@ -14,6 +14,16 @@ public class Manga {
 
     private String latestChapter = "0";
 
+    public String getDocumentID() {
+        return documentID;
+    }
+
+    public void setDocumentID(String documentID) {
+        this.documentID = documentID;
+    }
+
+    private String documentID = "";
+
     public Manga(String id, Attribute attribute, List<Relationship> relationships) {
         this.id = id;
         this.attribute = attribute;
