@@ -30,6 +30,11 @@
                 android:title="Login">
 
             </item>
+
+            <item android:id="@+id/about_item"
+                android:title="About">
+
+            </item>
         </menu>
     </item>
 </menu>

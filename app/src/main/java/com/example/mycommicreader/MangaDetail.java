@@ -63,6 +63,7 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
     private String DocumentID;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
+    private boolean deleted = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,15 +96,8 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
             binding.type.setText("Demographic: " + type + ".");
             binding.status.setText("Status: " + status + ".");
             binding.year.setText("Year: " + year + ".");
-            try {
-                for (String s : followed) {
-                    if (s.equals(id)) {
-                        binding.followButton.setText("Followed");
-                    }
-
-                }
-            } catch (Exception e) {
-                Log.d("DEBUG", e.getMessage());
+            if (followed.indexOf(id)>=0) {
+                binding.followButton.setText("Followed");
             }
             getSupportActionBar().setTitle("Manga detail");
             String url = "https://uploads.mangadex.org/covers/" + id + "/" + coverFileName + ".256.jpg";
@@ -117,9 +111,11 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
                     if (binding.followButton.getText().toString() == "Follow") {
                         binding.followButton.setText("Followed");
                         postDataStore(IDUser, id);
+                        deleted = false;
                     } else {
                         binding.followButton.setText("Follow");
                         DeleteDataStore(IDUser, id);
+                        deleted = true;
                     }
                 } catch (Exception e) {
 
@@ -189,6 +185,11 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
                 case android.R.id.home:
                     Intent i = new Intent();
                     i.putExtra("DocID", DocumentID);
+                    if (deleted) {
+                        i.putExtra("mangaID", id);
+                    } else {
+                        i.putExtra("mangaID", "");
+                    }
                     setResult(RESULT_OK, i);
                     finish();
                     return true;
