@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -107,18 +108,22 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
         binding.followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    if (binding.followButton.getText().toString() == "Follow") {
-                        binding.followButton.setText("Followed");
-                        postDataStore(IDUser, id);
-                        deleted = false;
-                    } else {
-                        binding.followButton.setText("Follow");
-                        DeleteDataStore(IDUser, id);
-                        deleted = true;
-                    }
-                } catch (Exception e) {
+                if (IDUser == null || IDUser.equals("")) {
+                    LoginAlert();
+                } else {
+                    try {
+                        if (binding.followButton.getText().toString() == "Follow") {
+                            postDataStore(IDUser, id);
+                            binding.followButton.setText("Followed");
+                            deleted = false;
+                        } else {
+                            DeleteDataStore(IDUser, id);
+                            binding.followButton.setText("Follow");
+                            deleted = true;
+                        }
+                    } catch (Exception e) {
 
+                    }
                 }
             }
         });
@@ -247,5 +252,15 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
                         }
                     }
                 });
+    }
+
+    void LoginAlert() {
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MangaDetail.this);
+        //dlgAlert.setTitle("Login");
+        String s = "Login to use this feature (～￣▽￣)～";
+        dlgAlert.setMessage(s);
+        dlgAlert.setPositiveButton("OK", null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
     }
 }

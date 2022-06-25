@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
     ArrayList<String> followed;
-    private static String idUser;
+    private static String idUser = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         intent.putExtra("type", m.getType());
         intent.putExtra("status", m.getStatus());
         intent.putExtra("year", m.getYear());
-        intent.putExtra("UserID",idUser);
+        intent.putExtra("UserID", idUser);
         intent.putExtra("DocumentID",m.getDocumentID());
         intent.putStringArrayListExtra("followed", followed);
         startActivityForResult(intent, 2);
@@ -242,9 +242,13 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.followed_item:
-                getSupportActionBar().setTitle("Following");
                 try {
-                    new MainActivity.GetManga("Follow").execute();
+                    if (idUser == null || idUser == "") {
+                        LoginAlert();
+                    } else {
+                        getSupportActionBar().setTitle("Following");
+                        new MainActivity.GetManga("Follow").execute();
+                    }
                 } catch (Exception e) {
 
                 }
@@ -297,6 +301,16 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                 "   Duong Xuan Ngoc Phong\n" +
                 "   Nguyen Phan Minh Nhat\n\n" +
                 "All manga credit belongs to MangaDex (https://mangadex.org/)";
+        dlgAlert.setMessage(s);
+        dlgAlert.setPositiveButton("OK", null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+    }
+
+    void LoginAlert() {
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
+        //dlgAlert.setTitle("Login");
+        String s = "Login to use this feature (～￣▽￣)～";
         dlgAlert.setMessage(s);
         dlgAlert.setPositiveButton("OK", null);
         dlgAlert.setCancelable(true);
