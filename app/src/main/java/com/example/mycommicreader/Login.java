@@ -51,25 +51,29 @@ public class Login extends AppCompatActivity {
         }
     }
     private void login(String email, String password){
-        mAuth.signInWithEmailAndPassword(email,password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("DEBUG", "signInWithEmail:success");
-                            Toast.makeText(Login.this, "Authentication successful.",Toast.LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Intent i = new Intent();
-                            i.putExtra("userID",user.getUid());
-                            setResult(RESULT_OK,i);
-                            finish();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("DEBUG", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(Login.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
+        try {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("DEBUG", "signInWithEmail:success");
+                                Toast.makeText(Login.this, "Authentication successful.", Toast.LENGTH_SHORT).show();
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Intent i = new Intent();
+                                i.putExtra("userID", user.getUid());
+                                setResult(RESULT_OK, i);
+                                finish();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("DEBUG", "signInWithEmail:failure", task.getException());
+                                Toast.makeText(Login.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        } catch (Exception e) {
+            
+        }
     }
 }
