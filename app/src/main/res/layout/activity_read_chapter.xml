@@ -44,5 +44,17 @@
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:textSize="17dp">
+
+        </TextView>
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

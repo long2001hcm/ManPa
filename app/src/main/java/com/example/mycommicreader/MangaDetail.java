@@ -6,9 +6,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -158,13 +161,24 @@ public class MangaDetail extends AppCompatActivity implements ChapterAdapter.OnN
         @Override
         protected void onPostExecute (Void result) {
             super.onPostExecute(result);
+            binding.notify.setText("");
+            if (!isNetworkAvailable()) {
+                binding.notify.setText("No internet connection ￣へ￣");
+            } else if (chapterList.size() == 0) {
+                binding.notify.setText("Sorry, no chapter available ಥ_ಥ");
+            }
             binding.chapterList.setAdapter(chapterAdapter);
             binding.chapterList.setLayoutManager(new GridLayoutManager(getApplicationContext(), 5));
             progress.dismiss();
 
         }
     }
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     @Override
     public void onNoteClick(int position) {
         Intent intent = new Intent(MangaDetail.this, ReadChapter.class);

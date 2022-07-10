@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -143,13 +146,24 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         @Override
         protected void onPostExecute (Void result) {
             super.onPostExecute(result);
+            binding.notify.setText("");
+            if (!isNetworkAvailable()) {
+                binding.notify.setText("No internet connection ￣へ￣");
+            } else if (mangaList.size() == 0) {
+                binding.notify.setText("No manga found w(ﾟДﾟ)w");
+            }
             binding.rvMangas.setAdapter(mangaAdapter);
             binding.rvMangas.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
             progress.dismiss();
 
         }
     }
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     @Override
     public void onNoteClick(int position) {
         Intent intent = new Intent(MainActivity.this, MangaDetail.class);
@@ -222,7 +236,8 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                new MainActivity.GetManga("").execute();
+                new MainActivity.GetManga("update").execute();
+                getSupportActionBar().setTitle("Recently updated");
                 return true;
             }
         });

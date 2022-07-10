@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -128,11 +131,24 @@ public class ReadChapter extends AppCompatActivity {
         @Override
         protected void onPostExecute (Void result) {
             super.onPostExecute(result);
+            binding.notify.setText("");
+            if (!isNetworkAvailable()) {
+                binding.notify.setText("No internet connection ￣へ￣");
+            } else if (listUrl.size() == 0) {
+                binding.notify.setText("Can't load this chapter (っ °Д °;)っ");
+            }
             binding.image.setAdapter(imageAdapter);
             binding.image.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
             progress.dismiss();
 
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
