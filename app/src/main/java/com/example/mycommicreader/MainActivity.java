@@ -50,22 +50,26 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
     List<Manga> mangaList = new ArrayList<>();
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
+    private Session session;
     ArrayList<String> followed;
     private static String idUser = "";
+    private boolean i;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.rgb(255, 199, 249)));
-        getSupportActionBar().setTitle("Recently updated");
+        getSupportActionBar().setTitle("Following");
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         mangaAdapter = new MangaAdapter(mangaList, this, this);
         setContentView(view);
+        session = new Session(this);
+        idUser = session.getUserName();
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         followed = new ArrayList<>();
-        new MainActivity.GetManga("update").execute();
+        new MainActivity.GetManga("Follow").execute();
 
     }
 
@@ -91,48 +95,19 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                 } else if (title == "popular") {
                     m = MangaApiService.apiService.getPopularManga().execute();
                 } else if (title == "Follow") {
+                    i = true;
                     getDataStore(idUser);
+                    while (true) {
+                        if (!i) {
+                            break;
+                        }
+                    }
                     m = MangaApiService.apiService.getFollowedManga(followed).execute();
                 } else {
                     m = MangaApiService.apiService.findManga(title).execute();
                 }
 
-
                 mangaList.addAll(m.body().getData());
-
-//                get followed manga
-//                List<String> listMangaID = new ArrayList<>();
-//                list.add("a96676e5-8ae2-425e-b549-7f15dd34a6d8");
-//                list.add("37f5cce0-8070-4ada-96e5-fa24b1bd4ff9");
-//                m = MangaApiService.apiService.getFollowedManga(listMangaID).execute();
-
-
-//                get chapter list
-//                Response<ChapterBread> c = MangaApiService.apiService.getChapter("6b1eb93e-473a-4ab3-9922-1a66d2a29a4a").execute();
-//                List<Chapter> listChapter = c.body().getChapter();
-//                for (Chapter l:listChapter) {
-//                    Log.d("DEBUG", l.getId() + " " + l.getChapter() + " " + l.getChapterTitle() + " " + l.getChapterPublishDate());
-//                }
-
-
-//                get chapter image
-//                Response<ChapterData> c = MangaApiService.apiService.getChapterImage("1791d49c-8bd4-452f-9dc9-9ca6145b147a").execute();
-//                List<String> listUrl = c.body().getChapterImageUrl();
-//                for (String s: listUrl) {
-//                    Log.d("DEBUG", s);
-//                }
-
-
-//                get latest chapter
-//                for (Manga manga:mangaList) {
-//                    Response<LatestChapter> l = MangaApiService.apiService.getLatestChapter(manga.getID()).execute();
-//                    try {
-//                        manga.setLatestChapter(l.body().getLatestChapter());
-//                    } catch (Exception e) {
-//
-//                    }
-//
-//                }
 
             } catch(Exception e) {
                 Log.d("DEBUG", e.toString());
@@ -203,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                     idUser = name;
                     Log.d("DEBUG", idUser);
                     getDataStore(idUser);
+                    session.setUserName(idUser);
                 }
             }
         } catch (Exception e) {
@@ -281,6 +257,11 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                 Intent i = new Intent(MainActivity.this,Login.class);
                 startActivityForResult(i, 3);
                 return true;
+            case R.id.logout_item:
+                idUser = "";
+                session.setUserName(idUser);
+                Logout();
+                return true;
             case R.id.about_item:
                 About();
                 return true;
@@ -301,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                                 followed.add(IDManga);
                                 Log.d("DEBUG", document.getId() + " => " + document.getData().get("IDManga").toString());
                             }
+                            i = false;
                             Log.d("DEBUG",  " => " + followed.size());
                         } else {
                             Log.w("DEBUG", "Error getting documents.", task.getException());
@@ -327,6 +309,16 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
         //dlgAlert.setTitle("Login");
         String s = "Login to use this feature (～￣▽￣)～";
+        dlgAlert.setMessage(s);
+        dlgAlert.setPositiveButton("OK", null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+    }
+
+    void Logout() {
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
+        //dlgAlert.setTitle("Login");
+        String s = "You logged out (～￣▽￣)～";
         dlgAlert.setMessage(s);
         dlgAlert.setPositiveButton("OK", null);
         dlgAlert.setCancelable(true);

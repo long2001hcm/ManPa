@@ -30,7 +30,10 @@
                 android:title="Login">
 
             </item>
+            <item android:id="@+id/logout_item"
+                android:title="Logout">
 
+            </item>
             <item android:id="@+id/about_item"
                 android:title="About">
 
