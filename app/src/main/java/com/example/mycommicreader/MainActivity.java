@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
 
             try {
                 Response<MangaBread> m;
+                mangaList.removeAll(mangaList);
                 if (title == "update") {
                     m = MangaApiService.apiService.getManga().execute();
                 } else if (title == "popular") {
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements MangaAdapter.OnNo
                     m = MangaApiService.apiService.findManga(title).execute();
                 }
 
-                mangaList.removeAll(mangaList);
+
                 mangaList.addAll(m.body().getData());
 
 //                get followed manga
